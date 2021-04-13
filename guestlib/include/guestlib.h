@@ -1,11 +1,7 @@
 #ifndef __VGPU_GUESTLIB_H__
 #define __VGPU_GUESTLIB_H__
 
-#include <errno.h>
 #include <stdint.h>
-#include <sys/mman.h>
-#include <sys/stat.h>        /* For mode constants */
-#include <fcntl.h>           /* For O_* constants */
 
 #include "common/cmd_channel.h"
 #include "migration.h"

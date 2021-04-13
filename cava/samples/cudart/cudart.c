@@ -4,6 +4,7 @@ ava_identifier(CUDART);
 ava_number(9);
 ava_cflags(-I/usr/local/cuda-10.1/include -I../headers -DAVA_RECORD_REPLAY -DAVA_BENCHMARKING_MIGRATE);
 ava_libs(-L/usr/local/cuda-10.1/lib64 -lcudart -lcuda -lcublas -lcudnn);
+ava_guestlib_srcs(extensions/migration_barrier.c);
 ava_export_qualifier();
 
 /**
@@ -1938,3 +1939,14 @@ cudnnPoolingBackward(cudnnHandle_t handle,
    ava_argument(dxDesc) ava_handle;
    ava_argument(dx) ava_handle;
 }
+
+ava_utility void __helper_guestlib_init_prologue() {
+    migration_barrier_init();
+}
+
+ava_utility void __helper_guestlib_fini_prologue() {
+    migration_barrier_destroy();
+}
+
+ava_guestlib_init_prologue(__helper_guestlib_init_prologue());
+ava_guestlib_fini_prologue(__helper_guestlib_fini_prologue());
