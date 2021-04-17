@@ -82,6 +82,8 @@ typedef struct {
     GHashTable *fatbin_funcs;     /* for NULL, the hash table */
     int num_funcs;
     struct fatbin_function *func; /* for functions */
+	
+    size_t buffer_size;
 
     /* global states */
     CUmodule cur_module;
