@@ -660,6 +660,7 @@ cudaMalloc(void **devPtr, size_t size)
 {
     ava_argument(devPtr) {
         ava_out; ava_buffer(1);
+        kjlasss
         ava_element ava_opaque;
         ava_allocates_resource(device_memory, size);
         ava_object_explicit_state_functions(object_extract, object_replace);
