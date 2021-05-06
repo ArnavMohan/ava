@@ -331,7 +331,7 @@ def record_argument_metadata(arg: Argument, src):
                 return ""
 
         def default_case():
-            return (Expr(type.transfer).equals("NW_HANDLE")).if_then_else(
+            return (Expr(type.transfer).one_of(["NW_HANDLE", "NW_OPAQUE"])).if_then_else(
                 Expr(not type.deallocates).if_then_else(
                     assign_record_replay_functions(param_value, type).then(
                         record_call_metadata(param_value, type)),
@@ -341,13 +341,10 @@ def record_argument_metadata(arg: Argument, src):
 
         if type.fields:
             return for_all_elements(values, type, depth=depth, original_type=original_type, **other)
-        return type.is_simple_buffer().if_then_else(
-            simple_buffer_case,
-            Expr(type.transfer).equals("NW_BUFFER").if_then_else(
+        return Expr(type.transfer).equals("NW_BUFFER").if_then_else(
                 buffer_case,
                 default_case
             )
-        )
 
     with location(f"at {term.yellow(str(arg.name))}", arg.location):
         conv = convert_result_value((f"{arg.name}",), arg.type,
@@ -367,3 +364,4 @@ def expunge_calls(handle, type: Optional[Type]) -> str:
     return f"""
         ava_expunge_recorded_calls(&__ava_endpoint, __log, {handle});
         """
+ 

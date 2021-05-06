@@ -246,8 +246,10 @@ static void _ava_extract_traverse(gpointer root, struct ava_extraction_state_t* 
     if (added) {
         struct ava_metadata_base* metadata = g_hash_table_lookup(state->metadata_map, root);
         DEBUG_PRINT("root addr=%lx, id=%lx\n", (uintptr_t)root, (uintptr_t)g_hash_table_lookup(state->pool->to_id, root));
-        if (metadata == NULL)
+        if (metadata == NULL){
+            printf("ava_extract_traverse metadata null\n");
             return;
+        }
 
         // Copy recorded calls into the array
         if (metadata->recorded_calls)
@@ -273,10 +275,14 @@ static void _ava_transfer_command(struct command_channel *output_chan, struct co
 
 static void _ava_extract_explicit(gpointer obj, gpointer value, struct ava_extraction_state_t* state) {
     struct ava_metadata_base* metadata = g_hash_table_lookup(state->metadata_map, obj);
-    if (metadata == NULL)
+    if (metadata == NULL){
+        printf("ava_extract_explicit metadata null\n");
         return;
-    if (!metadata->extract)
+    }
+    if (!metadata->extract){
+        printf("ava_extract_explicit metadata extract function null\n");
         return;
+    }
 
     void* id = nw_handle_pool_lookup_or_insert(state->pool, obj);
     size_t len = -1;
@@ -356,7 +362,7 @@ void ava_extract_objects_in_pair(struct command_channel *output_chan, struct com
     GPtrArray*const offset_pairs = g_ptr_array_new_full(to_extract->len, NULL);
     struct ava_extraction_state_t state = {dependencies, offset_pairs, nw_global_handle_pool, nw_global_metadata_map,
             output_chan};
-
+    printf("in ava_extract_objects_in_pair\n");
     // Add all globally recorded commands. NULL is the sentinel value for global.
     _ava_extract_traverse(NULL, &state);
     // Collect all offset pairs into an array, and all dependencies into a set
@@ -653,6 +659,10 @@ void ava_endpoint_destroy(struct ava_endpoint *endpoint)
 
 void ava_assign_record_replay_functions(struct ava_endpoint *endpoint, const void *handle, ava_extract_function extract, ava_replace_function replace)
 {
+    printf("In ava_assign_record_replay_functions\n");
+    if(extract == NULL || replace == NULL){
+        printf("null function ALERT\n");
+    }
     struct ava_metadata_base *__internal_metadata = ava_internal_metadata(endpoint, handle);
     __internal_metadata->extract = extract;
     __internal_metadata->replace = replace;

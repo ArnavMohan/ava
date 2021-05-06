@@ -636,7 +636,7 @@ cudaFreeHost(void *ptr)
 ava_end_replacement;
 
 
-/// Migration: Replay @mem_extract_tag
+/// Migration: @mem_extract_tag
 ava_utility void* object_extract(void* obj, size_t* length) {
     //called from host
     void* buffer;
@@ -659,14 +659,17 @@ __host__ __cudart_builtin__ cudaError_t CUDARTAPI
 cudaMalloc(void **devPtr, size_t size)
 {
     ava_argument(devPtr) {
+
         ava_out; ava_buffer(1);
-        kjlasss
-        ava_element ava_opaque;
-        ava_allocates_resource(device_memory, size);
-        ava_object_explicit_state_functions(object_extract, object_replace);
-        ava_object_record;
+        ava_element{
+            ava_allocates;
+            ava_opaque;
+            ava_object_explicit_state_functions(object_extract, object_replace);
+            ava_object_record;
+        }
     }
 
+    ava_execute();
     ava_metadata(*devPtr)->buffer_size = size;
 }
 

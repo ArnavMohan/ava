@@ -320,6 +320,7 @@ void internal_api_handler(struct command_channel *chan,
       }
 
       // Extract recorded commands and exlicit objects
+      printf("extract recorded commands and explicit objects");
       ava_extract_objects_in_pair(
           transfer_chan, nw_record_command_channel,
           nw_handle_pool_get_live_handles(nw_global_handle_pool));
