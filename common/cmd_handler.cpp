@@ -217,6 +217,7 @@ void internal_api_handler(struct command_channel *chan,
           nw_worker_id + 1000);
 
       // Transfer logs from nw_record_command_channel to new log channel
+      printf("ava_extract_objects called\n");
       ava_extract_objects(
           transfer_chan, nw_record_command_channel,
           nw_handle_pool_get_live_handles(nw_global_handle_pool));
